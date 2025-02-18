@@ -13,10 +13,6 @@ gem "sqlite3", ">= 1.4"
 gem "puma", ">= 5.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-# Use Sass for stylesheets
-gem "sassc-rails"
-# Use Bootstrap for styling
-gem "bootstrap", "~> 5.3.0"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
