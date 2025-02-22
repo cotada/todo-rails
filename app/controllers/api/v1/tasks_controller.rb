@@ -3,7 +3,9 @@ module Api
     class TasksController < ApplicationController
       # GET /api/v1/tasks
       def index
-        tasks = Task.all
+        tasks = Task.order(completed: :asc)
+                   .order(Arel.sql('CASE WHEN completed = true THEN 0 ELSE priority END DESC'))
+                   .order(created_at: :desc)
         render json: tasks
       end
 
@@ -49,7 +51,7 @@ module Api
       private
 
       def task_params
-        params.require(:task).permit(:title, :description, :completed)
+        params.require(:task).permit(:title, :description, :completed, :priority)
       end
     end
   end
