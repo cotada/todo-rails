@@ -4,10 +4,12 @@ class TasksController < ApplicationController
   # GET /tasks
   def index
     @tasks = Task.all
+    render json: @tasks
   end
 
   # GET /tasks/1
   def show
+    render json: @task
   end
 
   # GET /tasks/new
@@ -24,25 +26,30 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      redirect_to @task, notice: "Task was successfully created."
+      render json: @task, status: :created
     else
-      render :new, status: :unprocessable_entity
+      render json: @task.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /tasks/1
   def update
+    Rails.logger.info "Update params: #{params.inspect}"
+    Rails.logger.info "Task params: #{task_params.inspect}"
+    
     if @task.update(task_params)
-      redirect_to @task, notice: "Task was successfully updated.", status: :see_other
+      Rails.logger.info "Updated task: #{@task.inspect}"
+      render json: @task
     else
-      render :edit, status: :unprocessable_entity
+      Rails.logger.info "Task errors: #{@task.errors.inspect}"
+      render json: @task.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /tasks/1
   def destroy
     @task.destroy!
-    redirect_to tasks_url, notice: "Task was successfully destroyed.", status: :see_other
+    head :no_content
   end
 
   private
@@ -53,6 +60,6 @@ class TasksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def task_params
-      params.require(:task).permit(:title, :description, :completed)
+      params.require(:task).permit(:title, :description, :completed, :priority)
     end
 end
